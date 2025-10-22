@@ -4,6 +4,7 @@
 
 #include "AssetToolsModule.h"
 #include "IAssetTools.h"
+#include "UEMEditor.h"
 #include "Asset/UniversalExampleAsset.h"
 
 #define LOCTEXT_NAMESPACE "AssetTypeActions"
@@ -45,7 +46,21 @@ TConstArrayView<FAssetCategoryPath> UAssetDefinition_UniversalExampleAsset::GetA
 
 EAssetCommandResult UAssetDefinition_UniversalExampleAsset::OpenAssets(const FAssetOpenArgs& OpenArgs) const
 {
-	return Super::OpenAssets(OpenArgs);
+	//return Super::OpenAssets(OpenArgs);
+	const EToolkitMode::Type Mode = OpenArgs.GetToolkitMode();
+
+	for (UUniversalExampleAsset* UEA : OpenArgs.LoadObjects<UUniversalExampleAsset>())
+	{
+		// check if we have an editor open for this BT's blackboard & use that if we can
+		bool bFoundExisting = false;
+		
+		if (!bFoundExisting)
+		{
+			FUEMEditorModule& UEMEditorModule = FModuleManager::GetModuleChecked<FUEMEditorModule>("UEMEditor");
+			UEMEditorModule.CreateEditor(Mode, OpenArgs.ToolkitHost, UEA);
+		}
+	}
+	return EAssetCommandResult::Handled;
 }
 
 EAssetCommandResult UAssetDefinition_UniversalExampleAsset::PerformAssetDiff(const FAssetDiffArgs& DiffArgs) const

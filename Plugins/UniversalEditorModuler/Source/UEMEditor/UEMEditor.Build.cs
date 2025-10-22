@@ -28,6 +28,7 @@ public class UEMEditor : ModuleRules
                 "ToolMenus",             // 菜单系统
                 "AssetDefinition",       // UAssetDefinition 基类
                 "EngineAssetDefinitions",// UAssetDefinition_Blueprint 
+                "GameplayTags", 
             }
         );
     }
